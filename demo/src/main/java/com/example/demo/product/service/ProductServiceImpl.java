@@ -2,6 +2,7 @@ package com.example.demo.product.service;
 
 import com.example.demo.Account.UserTokenRepository;
 import com.example.demo.Account.entity.Account;
+import com.example.demo.Account.entity.RoleType;
 import com.example.demo.Account.entity.UserToken;
 import com.example.demo.Account.repository.AccountRepository;
 import com.example.demo.product.entity.Product;
@@ -32,17 +33,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Boolean register(RegisterRequestProductForm info, List<MultipartFile> fileList) {
+        log.info("service.register()");
         Optional<UserToken> maybeUserToken = userTokenRepository.findByUserToken(info.getUserToken());
         if(maybeUserToken.isEmpty()){
+            log.info("noUserToken");
             return false;
         }
         Long maybeBusinessId = maybeUserToken.get().getAccountId();
         Optional<Account> maybeBusiness = accountRepository.findById(maybeBusinessId);
         if(maybeBusiness.isEmpty()){
+            log.info("noAccount");
             return false;
         }
-
-        if(maybeBusiness.get().getRole().equals("BUSINESS")){
+        if(maybeBusiness.get().getRole().getRoleType() == RoleType.BUSINESS){
             Product savedProduct = productRepository.save(info.toProduct());
 
             try{
@@ -50,8 +53,10 @@ public class ProductServiceImpl implements ProductService {
 
                     String originalFileName = multipartFile.getOriginalFilename();
                     log.info("requestFilename: " +multipartFile.getOriginalFilename());
+                    String currentPath = System.getProperty("user.dir");
+                    log.info(currentPath);
                     FileOutputStream writer =new FileOutputStream(
-                            "/main/resources/UploadImgs" +
+                            "./demo/src/main/java/com/example/demo/UploadImgs/" +
                                     //"../../../Vue/YeoulCho/frontend/src/assets/uploadImgs" +
                                     multipartFile.getOriginalFilename()
                     );
@@ -75,7 +80,8 @@ public class ProductServiceImpl implements ProductService {
                 //입출력 에러(IO)않을 때 에러 프린트해라
                 return false;
             }
-        }else {return false;}
+        }else {log.info("noBusiness");
+            return false;}
 
        return true;
 

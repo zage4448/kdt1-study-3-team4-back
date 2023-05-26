@@ -1,7 +1,6 @@
 package com.example.demo.product.form;
 
 import com.example.demo.product.entity.Product;
-import com.example.demo.product.entity.ProductImages;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
