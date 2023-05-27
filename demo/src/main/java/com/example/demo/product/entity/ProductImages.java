@@ -10,6 +10,7 @@ import lombok.ToString;
 
 @ToString(exclude = { "product" })
 @Entity
+@Getter
 @NoArgsConstructor
 public class ProductImages {
 
