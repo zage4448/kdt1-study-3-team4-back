@@ -1,6 +1,8 @@
 package com.example.demo.product.entity;
 
+import com.example.demo.order.entity.Order;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +39,11 @@ public class Product {
     @UpdateTimestamp
     private LocalDateTime  updateDate;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<Order> orderList = new ArrayList<>();
+
+    @JsonIgnore
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ProductImages> productImagesList = new ArrayList<>();
 
