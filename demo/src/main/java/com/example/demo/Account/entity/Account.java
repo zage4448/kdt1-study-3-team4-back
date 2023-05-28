@@ -38,7 +38,7 @@ public class Account {
     }
 
     @ManyToOne
-    //private Role role;
+    private Role role;
 
     @JsonIgnore
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
