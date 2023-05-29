@@ -1,6 +1,7 @@
 package com.example.demo.Account.controller;
 
 import com.example.demo.Account.controller.form.AccountLoginRequestForm;
+import com.example.demo.Account.controller.form.AccountLoginResponseForm;
 import com.example.demo.Account.controller.form.AccountRegisterRequestForm;
 import com.example.demo.Account.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public String accountLogin (@RequestBody AccountLoginRequestForm requestForm) {
+    public AccountLoginResponseForm accountLogin (@RequestBody AccountLoginRequestForm requestForm) {
         return accountService.login(requestForm.toAccountLoginRequest());
     }
 }
