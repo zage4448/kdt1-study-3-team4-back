@@ -2,13 +2,11 @@ package com.example.demo.order.dto;
 
 import com.example.demo.Account.dto.AccountDTO;
 import com.example.demo.product.dto.ProductDTO;
-import com.example.demo.product.entity.ProductImages;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
