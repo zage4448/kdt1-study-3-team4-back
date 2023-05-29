@@ -19,10 +19,10 @@ public class OrderController {
     final private OrderService orderService;
     final private AccountService accountService;
 
-    @GetMapping("/history/{accountId}")
-    public List<OrderDTO> orderList(@PathVariable("accountId") Long accountId) {
+    @GetMapping("/history/{userToken}")
+    public List<OrderDTO> orderList(@PathVariable("userToken") String userToken) {
         log.info("orderList()");
-        List<OrderDTO> returnedOrderList = orderService.list(accountId);
+        List<OrderDTO> returnedOrderList = orderService.list(userToken);
 
         log.info("returnedProductList: " + returnedOrderList.get(0).toString());
         return returnedOrderList;

@@ -6,7 +6,7 @@ import com.example.demo.order.service.request.OrderRegisterRequest;
 import java.util.List;
 
 public interface OrderService {
-    List<OrderDTO> list(long accountId);
+    List<OrderDTO> list(String userToken);
 
     OrderDTO read(Long orderId);
 
