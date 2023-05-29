@@ -1,15 +1,17 @@
 package com.example.demo.product.service;
 
-import com.example.demo.Account.UserTokenRepository;
 import com.example.demo.Account.entity.Account;
 import com.example.demo.Account.entity.RoleType;
-import com.example.demo.Account.entity.UserToken;
 import com.example.demo.Account.repository.AccountRepository;
+import com.example.demo.Account.repository.UserTokenRepository;
+import com.example.demo.Account.repository.UserTokenRepositoryImpl;
+import com.example.demo.product.dto.ProductDTO;
 import com.example.demo.product.entity.Product;
 import com.example.demo.product.entity.ProductImages;
 import com.example.demo.product.form.RegisterRequestProductForm;
 import com.example.demo.product.repository.ImageRepository;
 import com.example.demo.product.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.demo.Account.entity.RoleType.BUSINESS;
 
 @Slf4j
 @Service
@@ -27,25 +32,24 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     final private ProductRepository productRepository;
-    final private UserTokenRepository userTokenRepository;
+    final private UserTokenRepository userTokenRepository = UserTokenRepositoryImpl.getInstance();
     final private AccountRepository accountRepository;
     final private ImageRepository imageRepository;
 
+    @Transactional
     @Override
     public Boolean register(RegisterRequestProductForm info, List<MultipartFile> fileList) {
         log.info("service.register()");
-        Optional<UserToken> maybeUserToken = userTokenRepository.findByUserToken(info.getUserToken());
-        if(maybeUserToken.isEmpty()){
-            log.info("noUserToken");
-            return false;
-        }
-        Long maybeBusinessId = maybeUserToken.get().getAccountId();
+        log.info(info.getUserToken());
+        Long maybeBusinessId = userTokenRepository.findAccountIdByToken(info.getUserToken());
+        log.info(String.valueOf(maybeBusinessId));
+
         Optional<Account> maybeBusiness = accountRepository.findById(maybeBusinessId);
         if(maybeBusiness.isEmpty()){
             log.info("noAccount");
             return false;
         }
-        if(maybeBusiness.get().getRole().getRoleType() == RoleType.BUSINESS){
+        if(maybeBusiness.get().getAccountRole().getRole().getRoleType() == BUSINESS){
             Product savedProduct = productRepository.save(info.toProduct());
 
             try{
@@ -90,4 +94,41 @@ public class ProductServiceImpl implements ProductService {
 
 
     }
+
+    @Override
+    @Transactional
+    public ProductDTO read(Long productId) {
+        final Optional<Product> maybeProduct = productRepository.findById(productId);
+
+        if (maybeProduct.isEmpty()) {
+            return null;
+        }
+        final Product product = maybeProduct.get();
+
+        final List<ProductImages> productImagesList =
+                imageRepository.findImagePathByProductId(productId);
+
+        log.info("productImagesList: " + productImagesList);
+
+        ProductDTO productDTO = new ProductDTO(product);
+
+        return productDTO;
+    }
+
+    @Override
+    @Transactional
+    public List<ProductDTO> list() {
+        List<Product> productList = productRepository.findAll();
+
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for(Product product : productList){
+            ProductDTO productDTO = new ProductDTO(product);
+            productDTOs.add(productDTO);
+            log.info(String.valueOf(productDTO));
+        }
+
+        return productDTOs;
+    }
+
+
 }

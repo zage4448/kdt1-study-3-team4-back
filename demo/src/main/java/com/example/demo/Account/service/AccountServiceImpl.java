@@ -79,8 +79,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Long findAccountId(String accountToken) {
-        return userTokenRepository.findAccountIdByToken(accountToken);
+    public Long findAccountId(String userToken) {
+        return userTokenRepository.findAccountIdByToken(userToken);
     }
 
 }

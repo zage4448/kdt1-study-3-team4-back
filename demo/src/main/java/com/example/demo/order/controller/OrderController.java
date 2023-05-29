@@ -1,7 +1,8 @@
 package com.example.demo.order.controller;
 
+import com.example.demo.Account.service.AccountService;
+import com.example.demo.order.controller.form.OrderRegisterRequestForm;
 import com.example.demo.order.dto.OrderDTO;
-import com.example.demo.order.entity.Order;
 import com.example.demo.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +13,11 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+
 @RequestMapping("/order")
 public class OrderController {
     final private OrderService orderService;
+    final private AccountService accountService;
 
     @GetMapping("/history/{accountId}")
     public List<OrderDTO> orderList(@PathVariable("accountId") Long accountId) {
@@ -36,5 +39,12 @@ public class OrderController {
         log.info("deleteOrder()");
 
         orderService.delete(orderId);
+    }
+
+    @PostMapping("/register")
+    public Boolean orderRegister (@RequestBody OrderRegisterRequestForm requestForm) {
+        final Long accountId = accountService.findAccountId(requestForm.getUserToken());
+
+        return orderService.register(accountId, requestForm.toOrderRegisterRequest());
     }
 }

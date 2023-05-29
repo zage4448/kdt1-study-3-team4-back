@@ -21,7 +21,7 @@ public class UserTokenRepositoryImpl implements UserTokenRepository {
     }
 
     @Override
-    public Long findAccountIdByToken(String accountToken) {
-        return userTokenMap.get(accountToken);
+    public Long findAccountIdByToken(String userToken) {
+        return userTokenMap.get(userToken);
     }
 }

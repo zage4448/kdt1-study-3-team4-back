@@ -4,5 +4,5 @@ public interface UserTokenRepository {
 
     void save(String userToken, Long id);
 
-    Long findAccountIdByToken(String accountToken);
+    Long findAccountIdByToken(String userToken);
 }

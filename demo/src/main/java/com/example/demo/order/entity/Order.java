@@ -55,6 +55,13 @@ public class Order {
         this.deliveryStatus = deliveryStatus;
     }
 
+    public Order(Account account, Product product) {
+        this.account = account;
+        this.product = product;
+        this.deliveryStatus = "1";
+        this.orderStatus = "1";
+    }
+
     public Order(Long orderId, Account account, Product product, String orderStatus, String deliveryStatus, LocalDateTime createDate) {
         this.orderId = orderId;
         this.account = account;

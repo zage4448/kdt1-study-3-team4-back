@@ -2,13 +2,17 @@ package com.example.demo.order.service;
 
 import com.example.demo.Account.dto.AccountDTO;
 import com.example.demo.Account.entity.Account;
+import com.example.demo.Account.entity.Role;
 import com.example.demo.Account.repository.AccountRepository;
+import com.example.demo.Account.repository.AccountRoleRepository;
 import com.example.demo.order.dto.OrderDTO;
 import com.example.demo.order.entity.Order;
 import com.example.demo.order.repository.OrderRepository;
+import com.example.demo.order.service.request.OrderRegisterRequest;
 import com.example.demo.product.dto.ProductDTO;
 import com.example.demo.product.entity.Product;
 import com.example.demo.product.entity.ProductImages;
+import com.example.demo.product.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.demo.Account.entity.RoleType.NORMAL;
+
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     final private OrderRepository orderRepository;
     final private AccountRepository accountRepository;
+    final private ProductRepository productRepository;
+    final private AccountRoleRepository accountRoleRepository;
     @Transactional
     @Override
     public List<OrderDTO> list(long accountId) {
@@ -86,5 +95,32 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus("-1");
         orderRepository.save(order);
         return 1;
+    }
+
+    @Override
+    public Boolean register(Long id, OrderRegisterRequest orderRegisterRequest) {
+        final Optional<Account> maybeAccount = accountRepository.findById(id);
+
+        if (maybeAccount.isEmpty()) {
+            return null;
+        }
+
+        final Account account = maybeAccount.get();
+        final Role role = accountRoleRepository.findRoleInfoByAccount(account);
+
+        if (role.getRoleType() != NORMAL) {
+            return null;
+        }
+
+        final Optional<Product> maybeProduct = productRepository.findById(orderRegisterRequest.getProductId());
+
+        if (maybeProduct.isEmpty()) {
+            return null;
+        }
+
+        final Order order = new Order(account, maybeProduct.get());
+        orderRepository.save(order);
+
+        return true;
     }
 }

@@ -37,9 +37,6 @@ public class Account {
         accountRole.setAccount(this);
     }
 
-    @ManyToOne
-    private Role role;
-
     @JsonIgnore
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<Order> orderList = new ArrayList<>();

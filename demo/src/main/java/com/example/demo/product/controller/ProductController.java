@@ -1,6 +1,6 @@
 package com.example.demo.product.controller;
 
-import com.example.demo.Account.UserTokenRepository;
+import com.example.demo.product.dto.ProductDTO;
 import com.example.demo.product.form.RegisterRequestProductForm;
 import com.example.demo.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,6 @@ import java.util.List;
 public class ProductController {
 
     final private ProductService productService;
-    final private UserTokenRepository userTokenRepository;
 
     @PostMapping(value = "/register",
     consumes = {
@@ -37,4 +36,13 @@ public class ProductController {
         return productService.register(info, fileList);
     }
 
+    @GetMapping("/read/{productId}")
+    public ProductDTO getProduct(@PathVariable("productId") Long productId){
+        return productService.read(productId);
+    }
+
+    @GetMapping("/list")
+    public List<ProductDTO> listProduct(){
+        return productService.list();
+    }
 }
