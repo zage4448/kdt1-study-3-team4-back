@@ -8,6 +8,7 @@ import com.example.demo.Account.repository.UserTokenRepositoryImpl;
 import com.example.demo.product.dto.ProductDTO;
 import com.example.demo.product.entity.Product;
 import com.example.demo.product.entity.ProductImages;
+import com.example.demo.product.form.ModifyRequestProductForm;
 import com.example.demo.product.form.RegisterRequestProductForm;
 import com.example.demo.product.repository.ImageRepository;
 import com.example.demo.product.repository.ProductRepository;
@@ -128,6 +129,61 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return productDTOs;
+    }
+
+    @Override
+    public Boolean modify(Long productId, List<MultipartFile> fileList, ModifyRequestProductForm info) {
+        Optional<Product> maybeProduct = productRepository.findById(productId);
+
+        if(maybeProduct.isEmpty()){
+            return false;
+        }
+        log.info("value" + info.getProductName() + info.getProductPrice() + info.getProductDetails());
+
+        Product product = maybeProduct.get();
+        product.setProductName(info.getProductName());
+        product.setProductPrice(info.getProductPrice());
+        product.setProductDetails(info.getProductDetails());
+        product.setVendor(info.getVendor());
+
+        Product savedProduct = productRepository.save(product);
+
+        imageRepository.deleteByProductId(productId);
+        try{
+            for(MultipartFile multipartFile: fileList){
+
+                String originalFileName = multipartFile.getOriginalFilename();
+                log.info("requestFilename: " +multipartFile.getOriginalFilename());
+                String currentPath = System.getProperty("user.dir");
+                log.info(currentPath);
+                FileOutputStream writer =new FileOutputStream(
+                        "./demo/src/main/java/com/example/demo/UploadImgs/" +
+                                //"../../../Vue/YeoulCho/frontend/src/assets/uploadImgs" +
+                                multipartFile.getOriginalFilename()
+                );
+                //하드디스크에 multipartFile을 기록할꺼야 경로랑 가져온 이름으로
+                writer.write(multipartFile.getBytes());
+                //byte파일로 기록할꺼야
+                writer.close();
+                //기록 끝! 그만할꺼야
+                ProductImages image = new ProductImages(originalFileName, savedProduct);
+                //fileTest 엔티티에 파일정보를 저장하겠다
+                log.info(originalFileName);
+                imageRepository.save(image);
+
+            }
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+            //파일이 존재하지 않을 때 에러 프린트해라
+            return false;
+        }catch(IOException e){
+            e.printStackTrace();
+            //입출력 에러(IO)않을 때 에러 프린트해라
+            return false;
+        }
+
+
+        return true;
     }
 
 

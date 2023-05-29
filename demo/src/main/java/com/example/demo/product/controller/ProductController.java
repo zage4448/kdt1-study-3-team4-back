@@ -1,6 +1,7 @@
 package com.example.demo.product.controller;
 
 import com.example.demo.product.dto.ProductDTO;
+import com.example.demo.product.form.ModifyRequestProductForm;
 import com.example.demo.product.form.RegisterRequestProductForm;
 import com.example.demo.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,12 @@ public class ProductController {
     @GetMapping("/list")
     public List<ProductDTO> listProduct(){
         return productService.list();
+    }
+
+    @PutMapping("/modify/{productId}")
+    public Boolean modifyProduct(@PathVariable("productId") Long productId,
+                                 @RequestPart(value = "imageFile") List<MultipartFile> fileList,
+                                 @RequestPart(value = "productInfo") ModifyRequestProductForm info){
+        return productService.modify(productId, fileList, info);
     }
 }
