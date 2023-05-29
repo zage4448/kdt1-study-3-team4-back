@@ -1,6 +1,6 @@
 package com.example.demo.order.controller;
 
-import com.example.demo.account.service.AccountService;
+import com.example.demo.Account.service.AccountService;
 import com.example.demo.order.controller.form.OrderRegisterRequestForm;
 import com.example.demo.order.dto.OrderDTO;
 import com.example.demo.order.service.OrderService;
@@ -43,7 +43,7 @@ public class OrderController {
 
     @PostMapping("/register")
     public Boolean orderRegister (@RequestBody OrderRegisterRequestForm requestForm) {
-        final Long accountId = accountService.findAccountId(requestForm.getAccountToken());
+        final Long accountId = accountService.findAccountId(requestForm.getUserToken());
 
         return orderService.register(accountId, requestForm.toOrderRegisterRequest());
     }

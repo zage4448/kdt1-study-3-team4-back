@@ -1,10 +1,10 @@
 package com.example.demo.order.service;
 
-import com.example.demo.account.dto.AccountDTO;
-import com.example.demo.account.entity.Account;
-import com.example.demo.account.entity.Role;
-import com.example.demo.account.repository.AccountRepository;
-import com.example.demo.account.repository.AccountRoleRepository;
+import com.example.demo.Account.dto.AccountDTO;
+import com.example.demo.Account.entity.Account;
+import com.example.demo.Account.entity.Role;
+import com.example.demo.Account.repository.AccountRepository;
+import com.example.demo.Account.repository.AccountRoleRepository;
 import com.example.demo.order.dto.OrderDTO;
 import com.example.demo.order.entity.Order;
 import com.example.demo.order.repository.OrderRepository;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.demo.account.entity.RoleType.NORMAL;
+import static com.example.demo.Account.entity.RoleType.NORMAL;
 
 
 @Slf4j
@@ -118,8 +118,8 @@ public class OrderServiceImpl implements OrderService {
             return null;
         }
 
-        final Order orders = new Order(account, maybeProduct.get());
-        orderRepository.save(orders);
+        final Order order = new Order(account, maybeProduct.get());
+        orderRepository.save(order);
 
         return true;
     }

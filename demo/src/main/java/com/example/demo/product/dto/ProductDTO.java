@@ -18,7 +18,8 @@ public class ProductDTO {
     private String productName;
     private Integer productPrice;
     private String vendor;
-    private List<String> image_resource_path;
+    private String productDetails;
+    private List<String> productImagesPathList;
     public ProductDTO(Product product) {
         this.productId = product.getProductId();
         this.productName = product.getProductName();
@@ -28,7 +29,8 @@ public class ProductDTO {
         for( ProductImages productImage : productImages ) {
             imagePaths.add(productImage.getImageResourcePath());
         }
-        this.image_resource_path = imagePaths;
+        this.productImagesPathList = imagePaths;
         this.vendor = product.getVendor();
+        this.productDetails = product.getProductDetails();
     }
 }
