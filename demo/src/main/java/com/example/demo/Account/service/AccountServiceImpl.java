@@ -1,5 +1,6 @@
 package com.example.demo.Account.service;
 
+import com.example.demo.Account.controller.form.AccountLoginResponseForm;
 import com.example.demo.Account.entity.Account;
 import com.example.demo.Account.entity.AccountRole;
 import com.example.demo.Account.entity.Role;
@@ -7,6 +8,7 @@ import com.example.demo.Account.entity.RoleType;
 import com.example.demo.Account.repository.*;
 import com.example.demo.Account.service.request.AccountLoginRequest;
 import com.example.demo.Account.service.request.AccountRegisterRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,7 +46,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public String login(AccountLoginRequest request) {
+    @Transactional
+    public AccountLoginResponseForm login(AccountLoginRequest request) {
         final Optional<Account> maybeAccount = accountRepository.findByEmail(request.getEmail());
         if (maybeAccount.isEmpty()) {
             return null;
@@ -55,7 +58,10 @@ public class AccountServiceImpl implements AccountService {
             final String userToken = UUID.randomUUID().toString();
             userTokenRepository.save(userToken, account.getId());
 
-            return userToken;
+            final Role role = accountRoleRepository.findRoleInfoByAccount(account);
+            log.info(role.getRoleType().name());
+
+            return new AccountLoginResponseForm(userToken, role.getRoleType().name());
         }
 
         return null;
