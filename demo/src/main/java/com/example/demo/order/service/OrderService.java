@@ -1,7 +1,7 @@
 package com.example.demo.order.service;
 
 import com.example.demo.order.dto.OrderDTO;
-import com.example.demo.order.entity.Order;
+import com.example.demo.order.service.request.OrderRegisterRequest;
 
 import java.util.List;
 
@@ -12,4 +12,5 @@ public interface OrderService {
 
     int delete(Long orderId);
 
+    Boolean register(Long id, OrderRegisterRequest orderRegisterRequest);
 }

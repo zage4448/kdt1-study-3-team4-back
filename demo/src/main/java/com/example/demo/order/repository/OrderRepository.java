@@ -1,6 +1,6 @@
 package com.example.demo.order.repository;
 
-import com.example.demo.Account.entity.Account;
+import com.example.demo.account.entity.Account;
 import com.example.demo.order.entity.Order;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
