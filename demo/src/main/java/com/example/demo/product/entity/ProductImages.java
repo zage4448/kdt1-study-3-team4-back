@@ -19,6 +19,7 @@ public class ProductImages {
     private Long id;
 
     @Getter
+    @Setter
     private String imageResourcePath;
 
     @Setter
